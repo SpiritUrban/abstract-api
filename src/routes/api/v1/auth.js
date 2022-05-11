@@ -3,15 +3,13 @@ const router = express.Router();
 const level = '../../../';
 const authControllers = `${level}controllers/auth`;
 import { mail } from '../../../services/index.js';
-
 import { register, changePassword, restoreAccess, restorePassword } from '../../../controllers/auth.js';
-
 import { apiEnsureAuthenticated } from '../../../my_modules/lib.js';
 
-router.post('/register', register); // Registration
-router.put('/change-password', apiEnsureAuthenticated, changePassword); // change-password
-router.post('/restore-access-by-email-or-username', restoreAccess); // restore access by email
-router.post('/restore-password', restorePassword); // restore access by 'email' & by 'user name'
+router.post('/register', register); // ................................................... Registration
+router.put('/change-password', apiEnsureAuthenticated, changePassword); // ............... change-password
+router.post('/restore-access-by-email-or-username', restoreAccess); // ................... restore access by email
+router.post('/restore-password', restorePassword); // .................................... restore access by 'email' & by 'user name'
 
 //
 router.post('/send-verification-mail', apiEnsureAuthenticated, (req, res) => {

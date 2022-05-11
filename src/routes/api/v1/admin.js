@@ -63,33 +63,5 @@ router.post('/drop-collection', as, require(`${path_ctr_admin}/testing/drop-coll
 router.get('/metrics', as, require(`${path_ctr_admin}/metrics/get-metrics`));
 
 
-///////////////////////////////////////////////////////
-//                    admin-msgs                     //
-///////////////////////////////////////////////////////
-// router.get('/admin-msgs', as, require(`${path_ctr_admin}/get-admin-msgs`));
-// router.post('/admin-msg', as, require(`${path_ctr_admin}/post-admin-msg`));
-// router.delete('/admin-msg/:_id', as, require(`${path_ctr_admin}/del-admin-msg`));
-
-///////////////////////////////////////////////////////
-//                        app                        //
-///////////////////////////////////////////////////////
-// // app_status
-// router.get('/app-status', as, require(`${path_ctr_admin}/app-status`));
-// // APP SETTINGS
-// router.get('/app-settings-get', as, require(`${path_ctr_admin}/app-settings-get`));
-// // add fee
-// router.post('/app-settings-fee-add', as, require(`${path_ctr_admin}/app-settings-fee-add`));
-// // del fee
-// router.post('/app-settings-fee-del', as, require(`${path_ctr_admin}/app-settings-fee-del`));
-// // change fee
-// router.post('/app-settings-fee-change', as, require(`${path_ctr_admin}/app-settings-fee-change`));
-
-///////////////////////////////////////////////////////
-//                       users                       //
-///////////////////////////////////////////////////////
-// get-all-users
-// router.post('/get-all-users', as, require(`${path_ctr_admin}/get-all-users`));
-// // del-user
-// router.post('/del-user/:idx', as, require(`${path_ctr_admin}/del-user`));
 
 export default router;
