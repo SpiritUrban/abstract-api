@@ -4,7 +4,7 @@
     "description": "a template for express, node.js",
     "main": "app.js",
     "scripts": {
-        "start": "nodemon ./server/server.js",
+        "start": "nodemon ./src/server/server.js",
         "dev-win": "set DEBUG=* &  npm run dev:start",
         "dev-unix": "DEBUG=*  npm run dev:start",
         "sass:compile": "node-sass  public/css/main.sass  public/css/main.css",
