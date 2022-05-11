@@ -1,31 +1,16 @@
-import { normalizePort, onError, onListening } from './functions.js';
-
-import fs from 'fs';
-import http from 'http';
-import https from 'https';
-
 import dotenv from 'dotenv';
 dotenv.config();
-
-import { dirname } from 'path';
-import { fileURLToPath } from 'url';
-const __dirname = dirname(fileURLToPath(import.meta.url));
+import { onError, onListening } from './functions.js';
+import http from 'http';
+import https from 'https';
 
 import app from '../app/_app.js';
 import { log } from '../my_modules/staff.js';
 
-
-// Get port from environment and store in Express.
-const port = normalizePort(process.env.PORT || '80');
+import port from './normalize.js'
 app.set('port', port);
 
-const options = {
-    ca: fs.readFileSync(__dirname + '/keys/ssl/ca_bundle.crt'),
-    cert: fs.readFileSync(__dirname + '/keys/ssl/certificate.crt'),
-    key: fs.readFileSync(__dirname + '/keys/ssl/private.key'),
-    // requestCert: false,
-    // rejectUnauthorized: false
-};
+import { options } from './options.js';
 
 // Servers 1
 const server = http.createServer(app).listen(port);
@@ -40,6 +25,8 @@ import socket from './socket.js';
 socket(server, server2);
 
 
-log('\n Run: server.js: '.info, server.address());
+log(`\n All servers have been successfully launched !!!`.info);
+log(server.address());
+log();
 
 
