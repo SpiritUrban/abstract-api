@@ -1,15 +1,13 @@
-console.time(">> ....  Run!");
-
-import { log } from '../my_modules/staff.js';
-
 const level = './';
+
+// measuring
+console.time('app startup time');
+
+// env
 import dotenv from 'dotenv';
 dotenv.config();
-
-import init from '../app/log/init.js'; //............ logs
-import info from '../app/base.js'; //................ show info
-
 // dependencies
+import { log } from '../my_modules/staff.js';
 import express from 'express';
 const app = express();
 import path from 'path';
@@ -25,10 +23,16 @@ import methodOverride from 'method-override';
 import passportFile from './passport.js';
 import db from './db.js';
 import additional from './additional.js';
+import multer from './multer.js';
+import init from '../app/log/init.js'; //............ logs
+import info from '../app/base.js'; //................ show info
+
+app.set('env', process.env.ENV);
 
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true, limit: '11111111mb' }));
 app.use(bodyParser.json({ limit: '11111111mb' }));
+
 app.use(session({
     secret: 'my_precious',
     name: 'cookie_name',
@@ -40,53 +44,31 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
+// static folders
 import staticModule from './static.js';
 staticModule(app);
 
-app.set('env', process.env.ENV);
+// cors
 app.use(cors());
+app.use(myCors);
+
 app.use(cookieParser());
 app.use(methodOverride());
-app.use(myCors);
+
 // safe user
-app.use(function (req, res, next) {
-    if (req.user) {
-        req.user = req.user;
-        req.user.password = null;
-        req.user.email_token = null;
-    } else {
-        req.user = { isLogged: false }
-    };
-    next();
-});
+import safeUser from './safe-user';
+safeUser(app);
 
+// measuring
+console.timeLog('app startup time');
+log('main');
 
+// routes
 import routes from '../routes/index.js';
 routes(app);
 
+// measuring
+console.timeEnd('app startup time');
+log('end');
 
-
-
-
-
-
-// // Multers disk storage settings
-// const multer = require('multer')
-// const storage = multer.diskStorage({
-//   destination: (req, file, cb) => cb(null, './uploads/'),
-//   filename: (req, file, cb) => cb(null, `${file.fieldname}-${Date.now()}.${file.originalname.split('.')[file.originalname.split('.').length - 1]}`)
-// })
-// // Multer settings
-// const upload = multer({storage}).single('file');
-
-
-// DB Ininializations and system infomation log
-// const appSet = require('./controllers/___/app.js')
-// appSet.init()
-
-console.timeEnd(">> .... . Ready!");
-
-// module.exports = app;
 export default app;
-
-
