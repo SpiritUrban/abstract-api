@@ -1,7 +1,6 @@
 import debug from 'debug';
 import { log } from '../my_modules/staff.js';
 
-
 //
 // Event listener for HTTP server "error" event.
 //
@@ -33,7 +32,7 @@ function onListening(server) {
     var bind = typeof addr === 'string' ?
         'pipe ' + addr :
         'port ' + addr.port;
-    log('Listening on ' + bind); // bind = 80
+    log(`\n Listening on ${bind} \n` ); // bind = 80
 
 };
 
