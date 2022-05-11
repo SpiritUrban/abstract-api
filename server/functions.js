@@ -1,4 +1,3 @@
-import debug from 'debug';
 import { log } from '../my_modules/staff.js';
 
 //

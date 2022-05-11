@@ -128,31 +128,34 @@ dist
 
 
 #temp
-app-events/
-controllers/
-data/
-dist/
-entities/
-external-connections/
-keys/
-living-processes/
-logs/
-models/
-my_modules/
-notes/
-platforms/
-public/
-routes/
-routes-socket/
-services/
-starters/
-tools/
-uploads/
-uploads-ads/
-uploads-alarm/
-uploads-app/
-uploads-msg/
-uploads-speaker-audio-msgs/
+# app-events/
+# controllers/
+# data/
+# dist/
+# entities/
+# external-connections/
+# keys/
+# living-processes/
+# logs/
+# models/
+# my_modules/
+# notes/
+# platforms/
+# public/
+# routes/
+# routes-socket/
+# services/
+# starters/
+# tools/
+# uploads/
+# uploads-ads/
+# uploads-alarm/
+# uploads-app/
+# uploads-msg/
+# uploads-speaker-audio-msgs/
+
+hiden
+server/keys
 
 
 

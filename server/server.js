@@ -1,11 +1,13 @@
+import { log } from '../my_modules/staff.js';
+// env
 import dotenv from 'dotenv';
 dotenv.config();
+//
 import { onError, onListening } from './functions.js';
 import { options } from './options.js';
 import http from 'http';
 import https from 'https';
 import app from '../app/_app.js';
-import { log } from '../my_modules/staff.js';
 import port from './normalize.js'
 app.set('port', port);
 
@@ -23,6 +25,7 @@ socket(server, server2);
 
 log(`\n All servers have been successfully launched !!!`.info);
 log(server.address());
+log(server2.address());
 log();
 
 
