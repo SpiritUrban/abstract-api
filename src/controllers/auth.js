@@ -11,50 +11,25 @@ class RegisterController extends Controller {
     unSuccessMsg;
     errMsg = 'Cannot register ';
     constructor() { super(  'Register'); }
-    do = async _ => this.result = await auth.registration(this.req.body);
-    // async do() {
-    //     this.result = await auth.registration(this.req.body);
-    // }
-    fork = _ => this.result.ok ? this.ok() : this.no()
+    // do = async _ => this.result = await auth.registration(this.req.body);
+    async do(){
+        this.result = await auth.registration(this.req.body);
+        log('66666666666666666666666666666', this.result)
+    } 
+
+    // fork = _ => this.result.ok ? this.ok() : this.no()
+
+    fork() {
+        log('this.result', this.result)
+         this.result.ok ? this.ok() : this.no()
+    }
+
     ok = _ => this.successRes()
     no() {
         this.unSuccessMsg = this.result.msg;
-        this.unSuccessRes('custom', 409);
+        this.unSuccessRes();
     }
 }
-
-const register = new RegisterController();
-// const some = register1.go;
-// export { some }
-
-
-class Car {
-constructor(brand) {
-    this.carname = brand;
-  }
-  present() {
-    return 'I have a ' + this.carname;
-  }
-  go (){
-      log('--------------go--------------', this.carname)
-  }
-}
-
-class Model extends Car {
-  constructor(brand, mod) {
-    super(brand);
-    this.model = mod;
-  }
-  show() {
-    return this.present() + ', it is a ' + this.model;
-  }
-}
-
-const mycar = new Model("Ford", "Mustang");
-log(mycar.show())
-
-
-
 
 
 
@@ -97,5 +72,5 @@ const restorePassword = async (req, res) => {
     };
 };
 
-export { register, changePassword, restoreAccess, restorePassword };
+export { RegisterController, changePassword, restoreAccess, restorePassword };
 

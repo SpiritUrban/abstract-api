@@ -1,9 +1,9 @@
 const level = '../../';
 import { log, rand_str_long, pro, lex, } from '../../my_modules/staff.js';
 import { User } from '../../models/index.js';
-import mail from './mail.service.js'; 
+import mail from './mail.service.js';
 import crypto from './crypto.service.js';
-import uuid from'uuid';
+import uuid from 'uuid';
 
 const self = {
     getAll: async (q = {}) => await User.find(q),
@@ -12,54 +12,85 @@ const self = {
     getOne: async (q) => await User.findOne(q),
 
     add: async (msg) => {
-        const mailOccupied = await User.findOne({ email: msg.email }); // Email already exists  ?
-        if (mailOccupied) return { ok: false, msg: 'Email already exists!' };
-        const usernameOccupied = await User.findOne({ username: msg.username }); // User already exists  ?
-        if (usernameOccupied) return { ok: false, msg: 'User already exists!' };
-        // do
-        const userInfo = {
-            role: msg.role || 'guest',
-            name: msg.name || msg.first_name + ' ' + msg.last_name,
-            phone: msg.phone,
-            language: msg.language || 'en',
-            room: msg.room,
-            username: msg.username,
-            email: msg.email,
-            open_password: msg.open_password,
-            password: crypto.hash(msg.password + ''),
-            email_token: rand_str_long(),
-            auth_token: rand_str_long(),
-            ass_token: rand_str_long(),
-            numeric_id: randomIntFromInterval(11111111, 99999999),
-            phone_pin: randomIntFromInterval(111111, 999999),
-            link_pin: randomIntFromInterval(111111, 999999),
-            wallets: {
-                USD: {
-                    balance: 0
-                }
-            },
-            facebook: {
-                id: '',
-                token: '',
-                email: '',
-                username: ''
-            },
-            google: {
-                id: '',
-                token: '',
-                email: '',
-                username: ''
-            },
-            active: false,
-            email_verif: false,
-            phone_verif: false,
-            ever_cha: uuid.v1(),
-            ever_sec: crypto.hash(uuid.v1())
-        };
-        await self.create(userInfo);
-        try { mail.sendMailVerification(u._id); } // ...................................... send mail for verification
-        catch (error) { log('Mails again not working! (file: controllers/users/create-new-user)'); };
-        return { ok: true };
+        try {
+            // return { ok: true }
+
+            try {
+
+                // return { ok: true }
+                
+                log('!!!!!!!!!!!!!!-1', msg, User)
+                const mailOccupied = await User.findOne({ email: msg.email }).catch(e => log('@@@@@@@@@@', e)); // Email already exists  ?
+                log('!!!!!!!!!!!!!!-2')
+
+                return { ok: true }
+
+                if (mailOccupied) return { ok: false, msg: 'Email already exists!' };
+                const usernameOccupied = await User.findOne({ username: msg.username }); // User already exists  ?
+                if (usernameOccupied) return { ok: false, msg: 'User already exists!' };
+            } catch (error) {
+            }
+
+            // do
+            log("MAKE user obj start")
+
+            return { ok: true }
+
+
+            const userInfo = {
+                role: msg.role || 'guest',
+                name: msg.name || msg.first_name + ' ' + msg.last_name,
+                phone: msg.phone,
+                language: msg.language || 'en',
+                room: msg.room,
+                username: msg.username,
+                email: msg.email,
+                open_password: msg.open_password,
+                password: crypto.hash(msg.password + ''),
+                email_token: rand_str_long(),
+                auth_token: rand_str_long(),
+                ass_token: rand_str_long(),
+                // numeric_id: randomIntFromInterval(11111111, 99999999),
+                // phone_pin: randomIntFromInterval(111111, 999999),
+                // link_pin: randomIntFromInterval(111111, 999999),
+                wallets: {
+                    USD: {
+                        balance: 0
+                    }
+                },
+                facebook: {
+                    id: '',
+                    token: '',
+                    email: '',
+                    username: ''
+                },
+                google: {
+                    id: '',
+                    token: '',
+                    email: '',
+                    username: ''
+                },
+                active: false,
+                email_verif: false,
+                phone_verif: false,
+                ever_cha: uuid.v1(),
+                ever_sec: crypto.hash(uuid.v1())
+            };
+
+            log("MAKE user obj")
+
+            await self.create(userInfo);
+
+            return { ok: true, msg: 'temp' };
+
+
+            try { mail.sendMailVerification(u._id); } // ...................................... send mail for verification
+            catch (error) { log('Mails again not working! (file: controllers/users/create-new-user)'); };
+
+            return { ok: true };
+        } catch (error) {
+            log('Errrrrrrrrrrrrrrrrrrrr in user service')
+        }
     },
 
     create: async (o) => await new User(o).save(),

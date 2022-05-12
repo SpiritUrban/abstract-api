@@ -207,6 +207,8 @@ const lex = self.lex;
 const pro = self.pro;
 const ensureFolder = self.ensureFolder;
 const logArr = self.logArr;
+const randomIntFromInterval = self.randomIntFromInterval;
 
 export { log, rand_str_long, pause, getRandom, lex, pro, ensureFolder, logArr };
+// export default self;
 

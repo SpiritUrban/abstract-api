@@ -1,9 +1,9 @@
 const level = '../../';
 import { log, rand_str_long, pro, lex, } from '../../my_modules/staff.js';
 import { User } from '../../models/index.js';
-import mail from './mail.service.js'; 
-import user from './user.service.js'; 
-import crypto from './crypto.service.js'; 
+import mail from './mail.service.js';
+import user from './user.service.js';
+import crypto from './crypto.service.js';
 const userService = user;
 
 const self = {
@@ -16,35 +16,38 @@ const self = {
         if (!password) return { ok: false, err: 'Password required!' };
         if (!username) return { ok: false, err: 'Username required!' };
         // do
-        const user = await userService.getOne({ username })
-        if (!user) {
-            const result = await user.add({
-                check_unique: {
-                    email: true,
-                    username: true
-                },
-                email,
-                password,
-                name: o.name,
-                username,
-                first_name,
-                last_name,
-            }, req, res);
-            if (!result.ok) return { ok: false, err: result.err };
-        };
-        return { ok: true }
+
+        // return { ok: true, msg: 'wwww' }
+
+        const result = await userService.add({
+            check_unique: {
+                email: true,
+                username: true
+            },
+            email,
+            password,
+            name: o.name,
+            username,
+            first_name,
+            last_name,
+        });
+
+        log("Mffffffffffffffffff", result)
+
+        if (!result.ok) return result;
+        else return { ok: true }
     },
 
-changePassword: async (o, user_id, user_password) => {
-    // var-s
-    var hp = crypto.hash(o.old_password + '');
-    var n_hp = crypto.hash(o.new_password + '');
-    // Check
-    if (hp !== user_password) return { ok: false, err: 'User password not correct!' }
-    // Change password
-    await User.findOneAndUpdate({ _id: user_id }, { password: n_hp });
-    return { ok: true }
-},
+    changePassword: async (o, user_id, user_password) => {
+        // var-s
+        var hp = crypto.hash(o.old_password + '');
+        var n_hp = crypto.hash(o.new_password + '');
+        // Check
+        if (hp !== user_password) return { ok: false, err: 'User password not correct!' }
+        // Change password
+        await User.findOneAndUpdate({ _id: user_id }, { password: n_hp });
+        return { ok: true }
+    },
 
     restorePassword: async (o) => {
         // var-s
@@ -60,31 +63,31 @@ changePassword: async (o, user_id, user_password) => {
         return 1;
     },
 
-        restorePasswordSimple: async (o) => {
-            // just send mail
-            await mail.sendMailWithPassword(o.email).catch(err => {
-                throw err;
-            });
-        },
+    restorePasswordSimple: async (o) => {
+        // just send mail
+        await mail.sendMailWithPassword(o.email).catch(err => {
+            throw err;
+        });
+    },
 
-            restoreAccess: async (o) => {
-                // var-s
-                const email = o.login_email
-                const username = o.login_username
-                // find by 'email' or 'username'
-                let user = (email) ?
-                    await User.findOne({ email }).exec() :
-                    await User.findOne({ username }).exec();
-                if (user == null) error('custom', req, res, 409, 'E-mail or user does not exist!');
-                const email_token = rand_str_long();
-                user = await User.findOneAndUpdate({ email }, { email_token });
-                // send mail for restore password
-                mail.sendMailAndRestorePassword(email);
-                return 1;
-            },
+    restoreAccess: async (o) => {
+        // var-s
+        const email = o.login_email
+        const username = o.login_username
+        // find by 'email' or 'username'
+        let user = (email) ?
+            await User.findOne({ email }).exec() :
+            await User.findOne({ username }).exec();
+        if (user == null) error('custom', req, res, 409, 'E-mail or user does not exist!');
+        const email_token = rand_str_long();
+        user = await User.findOneAndUpdate({ email }, { email_token });
+        // send mail for restore password
+        mail.sendMailAndRestorePassword(email);
+        return 1;
+    },
 
-                some: async (o) => {
-                },
+    some: async (o) => {
+    },
 }
 
 export default self;

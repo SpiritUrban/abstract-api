@@ -12,12 +12,10 @@ class DTO {
 }
 
 class Controller {
-    result = {test: 1};
-    req ={};
-    res={};
+    result = { test: 1 };
+    req = {};
+    res = {};
     constructor(_this, conName) {
-        log(this)
-        // this = _this
         this.conName = conName;
         this.result = {};
         this.req = {};
@@ -36,6 +34,7 @@ class Controller {
         this.res.json(this.dto);
     };
     unSuccessRes() {
+        log('unSuccessRes')
         this.dto = {
             code: '200',
             result: this.result,
@@ -45,14 +44,17 @@ class Controller {
             msg2: this.unSuccessMsg,
             from: 'send Universal'
         };
+        log('unSuccessRes')
         this.res.json(this.dto);
+        log('unSuccessRes')
     };
-    errorRes(status) {
+    errorRes() {
         this.dto = {
-            status,
+            code: '500',
+            status: '',
             err: this.err.toString(),
             success: false,
-            msg: 'Error in ' + req.url,
+            msg: 'Error in ' + this.req.url,
             msg2: this.errMsg,
             from: 'error Universal'
         };
@@ -62,13 +64,13 @@ class Controller {
         this.req = req;
         this.res = res;
         try {
-            // pro(`Controller: ${this.conName}`, module.filename,  req.body);
+            log(`Controller: ${this.conName}`, this.req.body);
             await this.do();
             this.fork();
         } catch (e) {
             this.err = e;
-            lex(e );
-            this.error(500, this.errMsg);
+            lex(e);
+            this.errorRes();
         };
     }
 };

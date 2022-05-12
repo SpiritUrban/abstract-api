@@ -2,11 +2,13 @@ const level = '../../../';
 import express from 'express';
 const router = express.Router();
 import { mail } from '../../../services/index.js';
-import { register, changePassword, restoreAccess, restorePassword } from '../../../controllers/auth.js';
+import { RegisterController, changePassword, restoreAccess, restorePassword } from '../../../controllers/auth.js';
 import { apiEnsureAuthenticated } from '../../../my_modules/lib.js';
 
 // !!!
-router.post('/register', (req, res) => register.go(req, res)); // ................................................... Registration
+// router.post('/register', (req, res) => register.go(req, res)); // ................................................... Registration
+router.post('/register', (req, res) => new RegisterController().go(req, res)); // ................................................... Registration
+
 
 router.put('/change-password', apiEnsureAuthenticated, changePassword); // ............... change-password
 router.post('/restore-access-by-email-or-username', restoreAccess); // ................... restore access by email
