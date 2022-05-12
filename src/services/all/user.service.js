@@ -1,8 +1,8 @@
 const level = '../../';
 import { log, rand_str_long, pro, lex, } from '../../my_modules/staff.js';
 import { User } from '../../models/index.js';
-import mail from './mail.service.js'; // ... !!! must be this way
-import crypto from './crypto.service.js'; // !!! must be this way
+import mail from './mail.service.js'; 
+import crypto from './crypto.service.js';
 import uuid from'uuid';
 
 const self = {

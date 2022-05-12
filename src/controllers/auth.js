@@ -12,6 +12,9 @@ class RegisterController extends Controller {
     errMsg = 'Cannot register ';
     constructor() { super(  'Register'); }
     do = async _ => this.result = await auth.registration(this.req.body);
+    // async do() {
+    //     this.result = await auth.registration(this.req.body);
+    // }
     fork = _ => this.result.ok ? this.ok() : this.no()
     ok = _ => this.successRes()
     no() {

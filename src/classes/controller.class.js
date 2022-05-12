@@ -59,18 +59,14 @@ class Controller {
         this.res.json(this.dto);
     };
     async go(req, res) {
-        log('++++++++++', req.url, this)
-        // this.req = req;
-        // this.req = 1;
-        // this.res = res;
-        log('++++++++++', req.url)
-
+        this.req = req;
+        this.res = res;
         try {
             // pro(`Controller: ${this.conName}`, module.filename,  req.body);
             await this.do();
             this.fork();
         } catch (e) {
-            // this.err = e;
+            this.err = e;
             lex(e );
             this.error(500, this.errMsg);
         };

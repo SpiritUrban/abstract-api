@@ -4,6 +4,7 @@ import { Phrase, Advertising, AlarmMsg } from '../../models/index.js';
 import mail from './mail.service.js'; 
 import fs from'fs';
 const fsPromises = fs.promises;
+
 const self = {
 
     get: async (user) => {
