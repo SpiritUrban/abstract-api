@@ -9,7 +9,7 @@ import auth from './api/v1/auth.js';
 import final from './api/v1/final.js' ;
 
 export default function (app) {
-    app.use(router);
+    // app.use(router);
     app.use('/', prepare);
     app.use('/', authStrategies);
     app.use('/', dev);

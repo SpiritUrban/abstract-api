@@ -1,26 +1,13 @@
 // .env
-// require('dotenv').config()
 import dotenv from 'dotenv';
 
-
 const level = '../';
-// const SETTINGS = require(`${level}SETTINGS.js`);
 import SETTINGS from '../SETTINGS.js';
-
-// const { log, pro, lex, rand_str_long } = require(`${level}my_modules/staff`);
 import { log,  rand_str_long } from '../my_modules/staff.js';
-
-// const { User } = require(`${level}models`);
-// const { crypto } = require(`${level}services`);
 import { User } from '../models/index.js';
 import { crypto } from '../services/index.js';
-
-
 import moment from 'moment';
-
-
 import passport from 'passport';
-
 import passportLocal from 'passport-local';
 const LocalStrategy = passportLocal.Strategy;
 
