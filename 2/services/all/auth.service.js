@@ -6,8 +6,10 @@ import user from './user.service.js';
 import crypto from './crypto.service.js';
 const userService = user;
 
-const self = {
-    registration: async (o) => {
+class AuthService {
+    constructor() { }
+
+    async registration(o) {
         // var-s
         const { email, password, username, firstName, lastName } = o;
         const { first_name, last_name } = o;
@@ -17,7 +19,7 @@ const self = {
         if (!username) return { ok: false, err: 'Username required!' };
         // do
 
-        return { ok: true, msg: 'wwww' }
+        return { ok: true, msg: 'temp' }
 
         const result = await userService.add({
             check_unique: {
@@ -36,9 +38,9 @@ const self = {
 
         if (!result.ok) return result;
         else return { ok: true }
-    },
+    }
 
-    changePassword: async (o, user_id, user_password) => {
+    async changePassword(o, user_id, user_password) {
         // var-s
         var hp = crypto.hash(o.old_password + '');
         var n_hp = crypto.hash(o.new_password + '');
@@ -47,7 +49,18 @@ const self = {
         // Change password
         await User.findOneAndUpdate({ _id: user_id }, { password: n_hp });
         return { ok: true }
-    },
+    }
+
+};
+
+export default new AuthService();
+
+
+
+const self = {
+
+
+
 
     restorePassword: async (o) => {
         // var-s
@@ -90,4 +103,4 @@ const self = {
     },
 }
 
-export default self;
+// export default self;

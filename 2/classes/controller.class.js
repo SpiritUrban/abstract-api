@@ -12,7 +12,7 @@ class DTO {
 }
 
 class Controller {
-    result = { test: 1 };
+    result = { some: 'Useful data' };
     req = {};
     res = {};
     constructor(_this, conName) {
