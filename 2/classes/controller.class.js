@@ -60,7 +60,7 @@ class Controller {
         } catch (e) {
             this.err = e;
             log(e);
-            this.errorRes();
+            return this.errorDTO
         };
     }
 };
