@@ -5,36 +5,21 @@ import mail from './mail.service.js';
 import crypto from './crypto.service.js';
 // import uuid from 'uuid';
 
-const self = {
-    getAll: async (q = {}) => await User.find(q),
-    getByToken: async (auth_token) => await User.findOne({ auth_token }),
-    getByAssToken: async (ass_token) => await User.findOne({ ass_token }),
-    getOne: async (q) => await User.findOne(q),
+class UserService {
+    constructor() { }
 
-    add: async (msg) => {
+    getAll = async (q = {}) => await User.find(q);
+    // async getByToken = async (auth_token) => await User.findOne({ auth_token });
+    getByAssToken = async (ass_token) => await User.findOne({ ass_token });
+    getOne = async (q) => await User.findOne(q);
+
+    async add(msg) {
         try {
-            try {
-
-                log('!!!!!!!!!!!!!!-1', msg, 777, User);
-                const user = await self.getOne({ email: msg.email });
-                // const user = await User.findOne({ email: msg.email }).catch(e => log('@@@@@@@@@@', e)); // Email already exists  ?
-                log('!!!!!!!!!!!!!!-2');
-
-                return { ok: true, msg: 222 }
-
-                if (user) return { ok: false, msg: 'Email already exists!' };
-                const usernameOccupied = await User.findOne({ username: msg.username }); // User already exists  ?
-                if (usernameOccupied) return { ok: false, msg: 'User already exists!' };
-            } catch (error) {
-                log('ERRRRRRRRRRRRRRRRR', error)
-            }
-
+            const user = await self.getOne({ email: msg.email });
+            if (user) return { ok: false, msg: 'Email already exists!' };
+            const usernameOccupied = await User.findOne({ username: msg.username }); // User already exists  ?
+            if (usernameOccupied) return { ok: false, msg: 'User already exists!' };
             // do
-            log("MAKE user obj start")
-
-            return { ok: true }
-
-
             const userInfo = {
                 role: msg.role || 'guest',
                 name: msg.name || msg.first_name + ' ' + msg.last_name,
@@ -81,7 +66,6 @@ const self = {
 
             return { ok: true, msg: 'temp' };
 
-
             try { mail.sendMailVerification(u._id); } // ...................................... send mail for verification
             catch (error) { log('Mails again not working! (file: controllers/users/create-new-user)'); };
 
@@ -89,21 +73,21 @@ const self = {
         } catch (error) {
             log('Errrrrrrrrrrrrrrrrrrrr in user service')
         }
-    },
+    }
 
-    create: async (o) => await new User(o).save(),
+    create = async (o) => await new User(o).save()
 
-    delAll: async () => await User.deleteMany({}),
+    delAll = async () => await User.deleteMany({})
 
-    edit: async (_id, msg) => {
+    async edit(_id, msg) {
         let edit = {}; // ......................................................... edit obj
         const isArray = msg instanceof Array; // ............................. must be array
         if (isArray) msg.forEach(el => edit[el.key] = el.newValue); // ...... build edit obj
         await User.findOneAndUpdate({ _id }, edit); // .............................. update
         return 1;
-    },
+    }
 
-    fake: async () => {
+    async fake() {
         return JSON.parse(`{
             "wallets": {
             "USD": {
@@ -142,7 +126,7 @@ const self = {
             "last_appeal": "2020-03-18T14:33:40.736Z",
             "__v": 0
         }`);
-    },
+    }
 };
 
-export default self;
+export default new UserService();

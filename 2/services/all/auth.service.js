@@ -18,9 +18,6 @@ class AuthService {
         if (!password) return { ok: false, err: 'Password required!' };
         if (!username) return { ok: false, err: 'Username required!' };
         // do
-
-        return { ok: true, msg: 'temp' }
-
         const result = await userService.add({
             check_unique: {
                 email: true,
@@ -33,9 +30,6 @@ class AuthService {
             first_name,
             last_name,
         });
-
-        log("Mffffffffffffffffff", result)
-
         if (!result.ok) return result;
         else return { ok: true }
     }
@@ -51,18 +45,7 @@ class AuthService {
         return { ok: true }
     }
 
-};
-
-export default new AuthService();
-
-
-
-const self = {
-
-
-
-
-    restorePassword: async (o) => {
+    async restorePassword(o) {
         // var-s
         const _id = o.user;
         const token = o.token;
@@ -74,16 +57,16 @@ const self = {
         // Change password
         await User.findOneAndUpdate({ _id }, { password: n_hp, email_token: '' });
         return 1;
-    },
+    }
 
-    restorePasswordSimple: async (o) => {
+    async restorePasswordSimple(o) {
         // just send mail
         await mail.sendMailWithPassword(o.email).catch(err => {
             throw err;
         });
-    },
+    }
 
-    restoreAccess: async (o) => {
+    async restoreAccess(o) {
         // var-s
         const email = o.login_email
         const username = o.login_username
@@ -97,10 +80,11 @@ const self = {
         // send mail for restore password
         mail.sendMailAndRestorePassword(email);
         return 1;
-    },
+    }
 
-    some: async (o) => {
-    },
-}
+    async some(o) {
+    }
 
-// export default self;
+};
+
+export default new AuthService();
