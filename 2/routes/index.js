@@ -1,6 +1,12 @@
 import { log, } from '../../../high-level/index.js';
 import express from 'express';
 var router = express.Router();
+import { RegisterController } from '../controllers/auth.js';
+
+async function mediator(req, res, next) {
+  const DTO = await this.go(req, res);
+  res.json(DTO);
+};
 
 router.get('/', function (req, res, next) {
   res.json({
@@ -8,24 +14,15 @@ router.get('/', function (req, res, next) {
   });
 });
 
-async function mediator(req, res, next) {
-  log('M: ', this)
-  res.json({ m: 5 });
 
-};
-import { RegisterController } from '../controllers/auth.js';
+[
+  { path: '/register', method: 'post', controller: RegisterController }
+].forEach(
+  // router.post('/register', mediator.bind(new RegisterController()));
+  item => router[item.method](item.path, mediator.bind(new item.controller()))
+);
 
-router.post('/register', mediator.bind(RegisterController));
 
-
-router.post('/register', async (req, res) => {
-
-  const ctrl = new RegisterController();
-  const DTO = await ctrl.go(req, res);
-  log('DTO')
-  res.json(DTO);
-
-});
 
 
 

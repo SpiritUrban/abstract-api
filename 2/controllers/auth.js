@@ -1,43 +1,20 @@
-// const level = '../';
-// import { log, rand_str_long, pro, lex, } from '../my_modules/staff.js';
-// import { auth } from '../services/index.js';
-import { log,} from '../../../high-level/index.js';
-
+import { auth } from '../services/index.js';
+import { log, } from '../../../high-level/index.js';
 import Controller from '../classes/controller.class.js'
-
-
 
 class RegisterController extends Controller {
     conName = 'Register';
     successMsg = 'User is registered';
     unSuccessMsg;
     errMsg = 'Cannot register ';
-    constructor(req, res) { 
-        super(  'Register');
+    constructor(req, res) {
+        super('Register');
         this.req = req;
         this.res = res;
-     }
-    // do = async _ => this.result = await auth.registration(this.req.body);
-    async do(){
-        // this.result = await auth.registration(this.req.body);
-        log('66666666666666666666666666666', this.result)
-    } 
-
-    // fork = _ => this.result.ok ? this.ok() : this.no()
-
-    fork() {
-        log('this.result', this.result)
-        //  this.result.ok ? this.ok() : this.no()
-        return this.result.ok ? {K:1} : {K:11111}
     }
-
-    ok = _ => this.successRes()
-    no() {
-        this.unSuccessMsg = this.result.msg;
-        this.unSuccessRes();
-    }
+    do = async _ => this.result = await auth.registration(this.req.body);
+    fork = _ => this.result.ok ? this.successDTO : this.unSuccessDTO
 }
-
 
 
 const changePassword = async (req, res) => {
