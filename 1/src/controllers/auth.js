@@ -4,40 +4,15 @@ import { auth } from '../services/index.js';
 import Controller from '../classes/controller.class.js'
 
 
-
 class RegisterController extends Controller {
     conName = 'Register';
     successMsg = 'User is registered';
     unSuccessMsg;
-    errMsg = 'Cannot register ';
-    constructor(req, res) { 
-        super(  'Register');
-        this.req = req;
-        this.res = res;
-     }
-    // do = async _ => this.result = await auth.registration(this.req.body);
-    async do(){
-        // return
-        this.result = await auth.registration(this.req.body);
-        this.res.json({ooo: 1})
-        log('66666666666666666666666666666', this.result)
-    } 
-
-    // fork = _ => this.result.ok ? this.ok() : this.no()
-
-    fork() {
-        log('this.result', this.result)
-         this.result.ok ? this.ok() : this.no()
-         return
-    }
-
-    ok = _ => this.successRes()
-    no() {
-        this.unSuccessMsg = this.result.msg;
-        this.unSuccessRes();
-    }
-}
-
+    errMsg = 'Cannot register!';
+    constructor() { super() }
+    do = async _ => this.result = await auth.registration(this.req.body);
+    fork = _ => this.result.ok ? this.successDTO : this.unSuccessDTO;
+};
 
 
 const changePassword = async (req, res) => {

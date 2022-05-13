@@ -78,7 +78,7 @@ app.use(function (err, req, res, next) {
 
     // render the error page
     res.status(err.status || 500);
-    res.json({y:4});
+    res.json({y:'end in _app.js'});
 });
 
 // measuring

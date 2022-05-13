@@ -8,6 +8,7 @@ const userService = user;
 
 const self = {
     registration: async (o) => {
+
         // var-s
         const { email, password, username, firstName, lastName } = o;
         const { first_name, last_name } = o;
@@ -16,6 +17,8 @@ const self = {
         if (!password) return { ok: false, err: 'Password required!' };
         if (!username) return { ok: false, err: 'Username required!' };
         // do
+
+        log("Mffffffffffffffffff")
 
         return { ok: true, msg: 'wwww' }
 

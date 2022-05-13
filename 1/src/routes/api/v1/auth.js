@@ -5,16 +5,19 @@ import { mail } from '../../../services/index.js';
 import { RegisterController, changePassword, restoreAccess, restorePassword } from '../../../controllers/auth.js';
 import { apiEnsureAuthenticated } from '../../../my_modules/lib.js';
 
-// !!!
-// router.post('/register', (req, res) => register.go(req, res)); // ................................................... Registration
-router.post('/register', async (req, res) =>{
-    await new RegisterController(req, res).go(req, res)
-} );  
-// router.post('/register', (req, res) => new RegisterController().go(req, res)); // ................................................... Registration
-// router.post('/register', (req, res) => {
-//     console.log(99999999999999);
-//     res.json({f:5})
-// });
+
+async function mediator(req, res, next) {
+    const DTO = await this.go(req, res);
+    res.json(DTO);
+};
+
+[
+    { path: '/register', method: 'post', controller: RegisterController }
+].forEach(
+    // router.post('/register', mediator.bind(new RegisterController()));
+    item => router[item.method](item.path, mediator.bind(new item.controller()))
+);
+
 
 router.put('/change-password', apiEnsureAuthenticated, changePassword); // ............... change-password
 router.post('/restore-access-by-email-or-username', restoreAccess); // ................... restore access by email

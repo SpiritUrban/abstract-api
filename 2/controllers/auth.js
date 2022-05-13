@@ -6,7 +6,7 @@ class RegisterController extends Controller {
     conName = 'Register';
     successMsg = 'User is registered';
     unSuccessMsg;
-    errMsg = 'Cannot register ';
+    errMsg = 'Cannot register!';
     constructor() { super() }
     do = async _ => this.result = await auth.registration(this.req.body);
     fork = _ => this.result.ok ? this.successDTO : this.unSuccessDTO
