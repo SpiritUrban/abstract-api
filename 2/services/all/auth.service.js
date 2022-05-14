@@ -1,5 +1,6 @@
 const level = '../../';
-import { log, rand_str_long, pro, lex, } from '../../my_modules/staff.js';
+import { log, } from '../../../../high-level/index.js';
+import {  rand_str_long, pro, lex, } from '../../my_modules/staff.js';
 import { User } from '../../models/index.js';
 import mail from './mail.service.js';
 import user from './user.service.js';
@@ -14,9 +15,9 @@ class AuthService {
         const { email, password, username, firstName, lastName } = o;
         const { first_name, last_name } = o;
         // checking
-        if (!email) return { ok: false, err: 'Email required!' };
-        if (!password) return { ok: false, err: 'Password required!' };
-        if (!username) return { ok: false, err: 'Username required!' };
+        if (!email) return { ok: false, msg: 'Email required!' };
+        if (!password) return { ok: false, msg: 'Password required!' };
+        if (!username) return { ok: false, msg: 'Username required!' };
         // do
         const result = await userService.add({
             check_unique: {
@@ -30,6 +31,7 @@ class AuthService {
             first_name,
             last_name,
         });
+        log(result).place()
         if (!result.ok) return result;
         else return { ok: true }
     }

@@ -1,5 +1,6 @@
 const level = '../../';
-import { log, rand_str_long, pro, lex, } from '../../my_modules/staff.js';
+import { log, } from '../../../../high-level/index.js';
+import { rand_str_long, pro, lex, } from '../../my_modules/staff.js';
 import { User } from '../../models/index.js';
 import mail from './mail.service.js';
 import crypto from './crypto.service.js';
@@ -15,7 +16,7 @@ class UserService {
 
     async add(msg) {
         try {
-            const user = await self.getOne({ email: msg.email });
+            const user = await this.getOne({ email: msg.email });
             if (user) return { ok: false, msg: 'Email already exists!' };
             const usernameOccupied = await User.findOne({ username: msg.username }); // User already exists  ?
             if (usernameOccupied) return { ok: false, msg: 'User already exists!' };
@@ -62,7 +63,7 @@ class UserService {
 
             log("MAKE user obj")
 
-            await self.create(userInfo);
+            await this.create(userInfo);
 
             return { ok: true, msg: 'temp' };
 
@@ -71,7 +72,8 @@ class UserService {
 
             return { ok: true };
         } catch (error) {
-            log('Errrrrrrrrrrrrrrrrrrrr in user service')
+            log('Error in user service!', error).place();
+            return { ok: false, msg: 'Error in user service!', error };
         }
     }
 
