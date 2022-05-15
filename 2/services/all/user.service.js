@@ -1,42 +1,33 @@
-const level = '../../';
-import { log, } from '../../../../high-level/index.js';
-import { rand_str_long, pro, lex, } from '../../my_modules/staff.js';
+import { log, randomString} from '../../../../high-level/index.js';
 import { User } from '../../models/index.js';
 import mail from './mail.service.js';
 import crypto from './crypto.service.js';
-// import uuid from 'uuid';
 
 class UserService {
     constructor() { }
-
     getAll = async (q = {}) => await User.find(q);
-    // async getByToken = async (auth_token) => await User.findOne({ auth_token });
     getByAssToken = async (ass_token) => await User.findOne({ ass_token });
     getOne = async (q) => await User.findOne(q);
-
     async add(msg) {
         try {
-            const user = await this.getOne({ email: msg.email });
-            if (user) return { ok: false, msg: 'Email already exists!' };
-            const usernameOccupied = await User.findOne({ username: msg.username }); // User already exists  ?
-            if (usernameOccupied) return { ok: false, msg: 'User already exists!' };
+            const userByEmail = await this.getOne({ email: msg.email });
+            if (userByEmail) return { ok: false, msg: 'Email already exists!' };
+            const userByUsername = await User.findOne({ username: msg.username }); // User already exists  ?
+            if (userByUsername) return { ok: false, msg: 'User already exists!' };
             // do
             const userInfo = {
                 role: msg.role || 'guest',
-                name: msg.name || msg.first_name + ' ' + msg.last_name,
+                name: msg.name || msg.firstName + ' ' + msg.lastName,
                 phone: msg.phone,
                 language: msg.language || 'en',
                 room: msg.room,
                 username: msg.username,
                 email: msg.email,
-                open_password: msg.open_password,
+                openPassword: msg.openPassword,
                 password: crypto.hash(msg.password + ''),
-                email_token: rand_str_long(),
-                auth_token: rand_str_long(),
-                ass_token: rand_str_long(),
-                // numeric_id: randomIntFromInterval(11111111, 99999999),
-                // phone_pin: randomIntFromInterval(111111, 999999),
-                // link_pin: randomIntFromInterval(111111, 999999),
+                emailToken: randomString(4),
+                authToken: randomString(4),
+                assToken: randomString(4),
                 wallets: {
                     USD: {
                         balance: 0
@@ -55,14 +46,9 @@ class UserService {
                     username: ''
                 },
                 active: false,
-                email_verif: false,
-                phone_verif: false,
-                // ever_cha: uuid.v1(),
-                // ever_sec: crypto.hash(uuid.v1())
+                emailVerif: false,
+                phoneVerif: false,
             };
-
-            log("MAKE user obj")
-
             await this.create(userInfo);
 
             return { ok: true, msg: 'temp' };
@@ -86,7 +72,7 @@ class UserService {
         const isArray = msg instanceof Array; // ............................. must be array
         if (isArray) msg.forEach(el => edit[el.key] = el.newValue); // ...... build edit obj
         await User.findOneAndUpdate({ _id }, edit); // .............................. update
-        return 1;
+        return { ok: true };
     }
 
     async fake() {
