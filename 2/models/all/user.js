@@ -66,17 +66,16 @@ const User = mongoose.model('User', {
     },
     linkedUsers: [],
     linkPin: Number,
-    // wallets: [walletSchema],
-    // cars: [carSchema],
     phonePin: Number,
-    //numeric_id: { type: Number, index: { unique: true } },
     lastAppeal: { type: Date, default: Date.now },
     lastMethod: String,
     gender: String,
     skills: String,
     specialization: String
+    // wallets: [walletSchema],
+    // cars: [carSchema],
+    //numericId: { type: Number, index: { unique: true } },
 });
-
 
 // //Schema
 // let walletSchema = new Schema({
@@ -94,6 +93,5 @@ const User = mongoose.model('User', {
 //     make: String,
 //     model: String,
 // }, { minimize: false, timestamps: true });
-
 
 export default User;

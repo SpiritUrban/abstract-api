@@ -17,8 +17,6 @@ var Msg = mongoose.model('Msg', {
     solvedBy: String,
     solvedTime: Date,
     solvedSpeed: String,
-    // analogs: [],
-    // enabled: Boolean,
     created: { type: Date, default: Date.now },
 });
 

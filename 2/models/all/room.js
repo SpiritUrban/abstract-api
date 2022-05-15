@@ -4,7 +4,6 @@ import mongoose from 'mongoose';
 var Room = mongoose.model('Room', {
     number: String,
     availability: String,
-    // speakerStatus: String,
     speaker: {
         ip: String,
         id: String,

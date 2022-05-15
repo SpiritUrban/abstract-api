@@ -11,17 +11,3 @@ var SuperTask = mongoose.model('SuperTask', {
 });
 
 export default SuperTask;
-
-
-    // to: String, // _id of user
-    // creator: String, // _id of user
-    // adId: String,
-    // hour: String,
-    // minute: String,
-    // day: String,
-    // month: String,
-    // year: String,
-    // date: Date,
-    // monthNumber: String,
-    // advertising: Object,
-    // text: String,

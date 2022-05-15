@@ -2,27 +2,12 @@ import mongoose from 'mongoose';
 
 // create a Msg model
 var ChatMsg = mongoose.model('ChatMsg', {
-    type: String,
+    type: String, // type of user
     path: String, // path to audio file of message
     text: Object,
-    // phraseId: String,
-    // phrase: Object,
-
-    from: String,
-    to: String,
-
-    // from_id: String, // _id of user
-    // to_id: String, // _id of user 
-
-    // from_type: String, // type of user
-    // to_type: String, // type of user 'visitor', 'admin', 'main-admin', 'super-admin',
-
-    // flow: String, // visitor _id message flow
+    from: String, // _id of user
+    to: String, // _id of user
     checked: { type: Boolean, default: false },
-
-    // solved: Boolean,
-    // analogs: [],
-    // enabled: Boolean,
     created: { type: Date, default: Date.now },
 });
 
