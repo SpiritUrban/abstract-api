@@ -12,7 +12,7 @@ class AuthService {
 
     async registration(newUser) {
         // var-s
-        const { email, password, username, firstName, lastName, name } = newUser;
+        const { email, password, username } = newUser;
         // checking
         if (!email) return { ok: false, msg: 'Email required!' };
         if (!password) return { ok: false, msg: 'Password required!' };
