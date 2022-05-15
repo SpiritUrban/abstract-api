@@ -13,67 +13,61 @@ class AuthService {
     async registration(o) {
         // var-s
         const { email, password, username, firstName, lastName, name } = o;
-        const { first_name, last_name } = o;
         // checking
         if (!email) return { ok: false, msg: 'Email required!' };
         if (!password) return { ok: false, msg: 'Password required!' };
         if (!username) return { ok: false, msg: 'Username required!' };
         // do
         const result = await userService.add({
-            check_unique: { email: true, username: true },
-            email, password, name, username, first_name, last_name,
+            checkUnique: { email: true, username: true },
+            email, password, name, username, firstName, lastName,
         });
         log(result).place()
         if (!result.ok) return result;
         else return { ok: true }
     }
 
-    async changePassword(o, user_id, user_password) {
+    async changePassword(o) {
         // var-s
-        var hp = crypto.hash(o.old_password + '');
-        var n_hp = crypto.hash(o.new_password + '');
+        const { _id, password } = o.user;
+        var hash = crypto.hash(o.oldPassword + '');
+        var newHash = crypto.hash(o.newPassword + '');
         // Check
         if (hp !== user_password) return { ok: false, err: 'User password not correct!' }
         // Change password
-        await User.findOneAndUpdate({ _id: user_id }, { password: n_hp });
+        await User.findOneAndUpdate({ _id }, { password: newHash });
         return { ok: true }
     }
 
     async restorePassword(o) {
         // var-s
-        const _id = o.user;
-        const token = o.token;
-        const n_hp = crypto.hash(o.new_password);
+        const { _id, authToken } = o.user;
+        const hash = crypto.hash(o.newPassword);
         // get user
         let user = await User.findOne({ _id }).exec();
         // Check
-        if (token !== user.email_token) return error('custom', req, res, 401, 'User token not correct!');
+        if (token !== user.emailToken) return error('custom', req, res, 401, 'User token not correct!');
         // Change password
-        await User.findOneAndUpdate({ _id }, { password: n_hp, email_token: '' });
-        return 1;
+        await User.findOneAndUpdate({ _id }, { password: hash, emailToken: '' });
+        return { ok: true }
     }
 
     async restorePasswordSimple(o) {
-        // just send mail
-        await mail.sendMailWithPassword(o.email).catch(err => {
-            throw err;
-        });
+        await mail.sendMailWithPassword(o.email).catch(err => { throw err });// just send mail
     }
 
     async restoreAccess(o) {
         // var-s
-        const email = o.login_email
-        const username = o.login_username
+        const { email, username } = o;
         // find by 'email' or 'username'
         let user = (email) ?
             await User.findOne({ email }).exec() :
             await User.findOne({ username }).exec();
         if (user == null) error('custom', req, res, 409, 'E-mail or user does not exist!');
-        const email_token = rand_str_long();
-        user = await User.findOneAndUpdate({ email }, { email_token });
-        // send mail for restore password
-        mail.sendMailAndRestorePassword(email);
-        return 1;
+        const emailToken = rand_str_long();
+        user = await User.findOneAndUpdate({ email }, { emailToken });
+        mail.sendMailAndRestorePassword(email); // send mail for restore password
+        return { ok: true }
     }
 
     async some(o) {
