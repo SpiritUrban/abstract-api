@@ -1,6 +1,6 @@
 const level = '../../';
 import { log, } from '../../../../high-level/index.js';
-import {  rand_str_long, pro, lex, } from '../../my_modules/staff.js';
+import { rand_str_long, pro, lex, } from '../../my_modules/staff.js';
 import { User } from '../../models/index.js';
 import mail from './mail.service.js';
 import user from './user.service.js';
@@ -12,7 +12,7 @@ class AuthService {
 
     async registration(o) {
         // var-s
-        const { email, password, username, firstName, lastName } = o;
+        const { email, password, username, firstName, lastName, name } = o;
         const { first_name, last_name } = o;
         // checking
         if (!email) return { ok: false, msg: 'Email required!' };
@@ -20,16 +20,8 @@ class AuthService {
         if (!username) return { ok: false, msg: 'Username required!' };
         // do
         const result = await userService.add({
-            check_unique: {
-                email: true,
-                username: true
-            },
-            email,
-            password,
-            name: o.name,
-            username,
-            first_name,
-            last_name,
+            check_unique: { email: true, username: true },
+            email, password, name, username, first_name, last_name,
         });
         log(result).place()
         if (!result.ok) return result;

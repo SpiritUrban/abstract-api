@@ -10,9 +10,6 @@ dotenv.config();
 // dependencies
 import { log } from '../my_modules/staff.js';
 
-// ???
-import path from 'path';
-
 // connect for running
 import db from './db.js';
 import init from './log/init.js'; //............ logs

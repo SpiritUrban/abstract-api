@@ -5,39 +5,31 @@ const User = mongoose.model('User', {
     language: String,
     isLogged: { type: Boolean, default: true }, // when you get user, its mean that you are logged
     shouldLogout: Date,
-    //oauthID: Number,
+    oauthID: Number,
     created: Date,
     name: String,
-
-    // deprecated
-    full_name: String,
-    first_name: String,
-    last_name: String,
-
-    // new
     fullName: String,
     firstName: String,
     lastName: String,
-
     nickname: String,
     purchases_made: [],
-    saved_numbers: [],
+    savedNumbers: [],
     username: { type: String, index: true, required: true, unique: true },
-    open_password: String,
+    openPassword: String,
     password: { type: String },
     email: { type: String, unique: true },
-    email_token: String,
-    email_verif: Boolean,
+    emailToken: String,
+    emailVerified: Boolean,
+    phoneVerified: Boolean,
     status: String,
     iss: String,
     role: String,
-    date_of_birth: Date,
-    phone_verif: Boolean,
+    dateOfBirth: Date,
     active: Boolean,
-    last_login: { type: Date, default: Date.now },
-    last_ip: String,
+    lastLogin: { type: Date, default: Date.now },
+    lastIp: String,
     avatar: String,
-    send_notifications: Boolean,
+    sendNotifications: Boolean,
     address1: String,
     address2: String,
     address3: String,
@@ -45,18 +37,15 @@ const User = mongoose.model('User', {
     postcode: String,
     country: String,
     phone: String,
-    ever_cha: String,
-    ever_sec: String,
-    pver_cha: String,
-    auth_token: String,
-    ass_token: String,
+    authToken: String,
+    assToken: String,
     // wallets
     wallets: {
         USD: {
             balance: Number
         }
     },
-    //
+    // auth by
     facebook: {
         id: String,
         token: String,
@@ -75,14 +64,14 @@ const User = mongoose.model('User', {
         email: String,
         username: String
     },
-    linked_users: [],
-    link_pin: Number,
+    linkedUsers: [],
+    linkPin: Number,
     // wallets: [walletSchema],
     // cars: [carSchema],
-    phone_pin: Number,
+    phonePin: Number,
     //numeric_id: { type: Number, index: { unique: true } },
-    last_appeal: { type: Date, default: Date.now },
-    last_method: String,
+    lastAppeal: { type: Date, default: Date.now },
+    lastMethod: String,
     gender: String,
     skills: String,
     specialization: String
