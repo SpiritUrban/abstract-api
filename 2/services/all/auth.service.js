@@ -19,18 +19,18 @@ class AuthService {
         if (!username) return { ok: false, msg: 'Username required!' };
         // do
         const result = await userService.add(newUser);
-        // log(result).place();
         if (!result.ok) return result;
         else return { ok: true }
     }
 
     async changePassword(o) {
         // var-s
-        const { _id, password } = o.user;
-        var hash = crypto.hash(o.oldPassword + '');
-        var newHash = crypto.hash(o.newPassword + '');
+        const { _id, oldPassword, newPassword } = o.user;
+        // hash
+        var hash = crypto.hash(oldPassword + '');
+        var newHash = crypto.hash(newPassword + '');
         // Check
-        if (hp !== user_password) return { ok: false, err: 'User password not correct!' }
+        if (hash !== userPassword) return { ok: false, err: 'User password not correct!' }
         // Change password
         await User.findOneAndUpdate({ _id }, { password: newHash });
         return { ok: true }
