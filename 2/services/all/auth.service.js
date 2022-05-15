@@ -10,19 +10,16 @@ const userService = user;
 class AuthService {
     constructor() { }
 
-    async registration(o) {
+    async registration(newUser) {
         // var-s
-        const { email, password, username, firstName, lastName, name } = o;
+        const { email, password, username, firstName, lastName, name } = newUser;
         // checking
         if (!email) return { ok: false, msg: 'Email required!' };
         if (!password) return { ok: false, msg: 'Password required!' };
         if (!username) return { ok: false, msg: 'Username required!' };
         // do
-        const result = await userService.add({
-            checkUnique: { email: true, username: true },
-            email, password, name, username, firstName, lastName,
-        });
-        log(result).place()
+        const result = await userService.add(newUser);
+        // log(result).place();
         if (!result.ok) return result;
         else return { ok: true }
     }
