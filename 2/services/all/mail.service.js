@@ -1,8 +1,8 @@
 import { log } from 'high-level';
 import { User, App } from '../../models/index.js';
-import path from'path';
+import path from 'path';
 import app from './app.service.js'; // ... !!! must be this way
-import nodemailer from'nodemailer';
+import nodemailer from 'nodemailer';
 
 // Open access ------------------- https://www.youtube.com/watch?v=JJ44WA_eV8E
 // Good, simple, description ----- https://codeburst.io/sending-an-email-using-nodemailer-gmail-7cfa0712a799
@@ -12,15 +12,38 @@ import nodemailer from'nodemailer';
 // ............................................. https://myaccount.google.com/lesssecureapps
 // process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
-class  Service {
+class Mail {
+    from
+    to
+    subject
+    html
     constructor() { }
+    send() {
+        // const template = 
+    }
+};
+
+// old: sendMailWithPassword
+//
+class MailWithPassword extends Mail {
+    mailName = 'MailWithPassword';
+    from = `FERON <${process.env.GMAIL}> `;
+    to = email;
+    subject = 'Restore of password';
+    html = `<p> You password: ${user.open_password} </p>`;
+    constructor() { super() }
+};
 
 
+class MailService {
+
+
+    constructor() { }
 
     //
     // init
     //
-    async init()  {
+    async init() {
         const appInfo = await app.getInfo();
         if (!appInfo.gmailSettings) throw 'Error: No data for init gmail'
         const gmailSettings = appInfo.gmailSettings
@@ -44,61 +67,71 @@ class  Service {
     //
     // main
     //
-    send(from, to, subject, html)  {
-        return new Promise(async (resolve, reject) => {
-            await this.init();
-            let mailOptions = { from, to, subject, html };
-            this.transporter.sendMail(mailOptions, async (err, res) => {
-                // console.log('err, res', err, res)
-                // if (err) return new Error(err)
-                if (err) reject(err)//throw new Error(err)
-                else resolve('Email Sent');
-            });
+    async send(template) {
+        await this.init();
+        let template = { from, to, subject, html };
+        this.transporter.sendMail(template, async (err, res) => {
+            // if (err) return new Error(err)
+            if (err) reject(err); //throw new Error(err)
+            else resolve('Email Sent');
         });
     }
+
+    async template(name) {
+        const example = {
+            from: null,
+            to: null,
+            subject: null,
+            html: null
+        }
+        return [
+
+        ];
+    };
 
     //
     // mail restore simple
     //
-    sendMailWithPassword (email)  {
-        return new Promise(async (resolve, reject) => {
+    async sendMailWithPassword(email) {
+        try {
             let user = await User.findOne({ email });
-            const template = (user.open_password) ?
-                // yes
-                [
-                    `FERON <${process.env.GMAIL}> `, // ........................... from
-                    email, // ..................................................... to
-                    'Restore of password', // ..................................... subject
-                    `<p> You password: ${user.open_password} </p>`// .............. html
-                ] :
-                // no
-                [
-                    `FERON <${process.env.GMAIL}> `, // ........................... from
-                    email, // ..................................................... to
-                    'Restore of password', // ..................................... subject
-                    `<p> Only visitors can get password. Contact your main administrator to recover your password. </p>`// .............. html
-                ];
-            await this.send(...template).catch(err => { reject(err) });
-            resolve({ ok: true });
-        });
+            const template = (user.openPassword) ?
+                {
+                    from: `COMPANY <${process.env.GMAIL}> `,
+                    to: email,
+                    subject: 'Restore of password',
+                    html: `<p> You password: ${user.open_password} </p>`
+                } : {
+                    from: `COMPANY <${process.env.GMAIL}> `,
+                    to: email,
+                    subject: 'Restore of password',
+                    html: `<p> Only visitors can get password. Contact your main administrator to recover your password. </p>`
+                };
+            await this.send(template);
+            return { ok: true };
+        } catch (err) {
+            return { ok: false, err }
+        }
     }
 
     //
     // mail restore
     //
-    async sendMailAndRestorePassword(email)  {
+    async sendMailAndRestorePassword(email) {
         let user = await User.findOne({ email });
-        this.send(
-            `FERON <${process.env.GMAIL}> `, // from
-            user.email, // to
-            'Restore of password', // subject
-            // html
-            `<p>
+
+        const example = {
+            from: `COMPANY <${process.env.GMAIL}> `,
+            to: user.email,
+            subject: 'Restore of password',
+            html: `
+            <p>
                 To restore your password, go to this link. 
                 <a href="${process.env.HOST}/pages/auth/restore-password?user=${user._id}&token=${user.email_token}" target="_blank">link</a>
             </p>`
-            + new Date(),
-        );
+                + new Date()
+        };
+        this.send(example);
         return { ok: true }
     }
 
@@ -107,34 +140,36 @@ class  Service {
     //
     async sendMailVerification(user_id) {
         let user = await User.findOne({ _id: user_id });
-        this.send(
-            `FERON <${process.env.GMAIL}> `, // from
-            user.email, // to
-            'Mail Confirmation', // subject
-            // html
-            `<p>
+        const example = {
+            from: `COMPANY <${process.env.GMAIL}> `,
+            to: user.email,
+            subject: 'Mail Confirmation',
+            html: `
+            <p>
                 To verify your mail, go to this link. 
                 <a href="${process.env.HOST}/pages/auth/mail-verify?user=${user._id}&token=${user.email_token}" target="_blank">link</a>
             </p>`
-            + new Date(),
-        );
+                + new Date()
+        }
+        this.send(example);
     }
 
     //
     // mail test
     //
-    async test(email)  {
-        this.send(
-            `FERON <${process.env.GMAIL}> `, // from
-            email, // to
-            'test ', // subject
-            // html
-            `<p>
-                   TEST
+    async test(email) {
+        const example = {
+            from: `COMPANY <${process.env.GMAIL}> `,
+            to: email,
+            subject: 'test ',
+            html: `
+            <p>
+                TEST
             </p>`
-            + new Date(),
-        );
+                + new Date()
+        }
+        this.send(example);
     }
 };
 
-export default new  Service();
+export default new MailService();
