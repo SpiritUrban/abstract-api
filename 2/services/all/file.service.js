@@ -1,13 +1,14 @@
-const level = '../../';
-import { log, rand_str_long, pro, lex, ensureFolder } from '../../my_modules/staff.js';
+import { log } from 'high-level';
+import { ensureFolder } from '../../my_modules/staff.js';
 import { Phrase, Advertising, AlarmMsg } from '../../models/index.js';
-import mail from './mail.service.js'; 
-import fs from'fs';
+import mail from './mail.service.js';
+import fs from 'fs';
 const fsPromises = fs.promises;
 
-const self = {
+class FileService {
+    constructor() { }
 
-    get: async (user) => {
+    async get(user) {
         return new Promise((resolve, reject) => {
             let user_folder = './uploads/' + user._id
             if (!fs.existsSync('./uploads')) fs.mkdirSync('./uploads'); // create General Folder ?
@@ -18,9 +19,9 @@ const self = {
                 resolve({ unique });
             });
         });
-    },
+    }
 
-    upload: async (user, msg) => {
+    async upload(user, msg)  {
         // var-s
         const load_type = msg.load_type;
         const mainFolder = msg.mainFolder;
@@ -67,31 +68,31 @@ const self = {
                 ["audio." + lang]: true
             });
         };
-    },
+    }
 
-    del: async (_id) => {
+    async del(_id)  {
         const user = msg._user;
         const user_folder = './uploads/' + user._id;
         const path = user_folder + '/' + msg.name;
-        await self.remove(path); // Remove file
-    },
+        await this.remove(path); // Remove file
+    }
 
-    delAny: async (folders, files) => {
+    async delAny(folders, files)  {
         for (let i = 0; i < files.length; i++) {
             const path = folders + '/' + files[i];
-            await self.remove(path);
+            await this.remove(path);
         };
-    },
+    }
 
-    delOfUser: async (user, files) => {
+    async delOfUser(user, files)  {
         let user_folder = './uploads/' + user._id;
         for (let i = 0; i < files.length; i++) {
             const path = user_folder + '/' + files[i];
-            await self.remove(path);
+            await this.remove(path);
         }
-    },
+    }
 
-    remove: async (path) => {
+    async remove(path)  {
         console.log('Remove--->', path);
         try {
             await fsPromises.unlink(path);
@@ -99,8 +100,8 @@ const self = {
         } catch (e) {
             return false
         }
-    },
+    }
 
-}
+};
 
-export default self;
+export default new FileService();

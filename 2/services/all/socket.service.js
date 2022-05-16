@@ -1,18 +1,15 @@
-const level = '../../';
 import { log, rand_str_long, pro, lex, } from '../../my_modules/staff.js';
 import { ChatMsg } from '../../models/index.js';
-import mail from './mail.service.js'; 
-import user from './user.service.js'; 
-import moment from 'moment'; 
+import mail from './mail.service.js';
+import user from './user.service.js';
+import moment from 'moment';
 
 let allClients = [];
 global.allClients = allClients;
 
-setInterval(() => {
-    // console.log('clients amount: ', allClients.length);
-    allClients.forEach(client => {
-        // console.log('client: ', client.user?.role);
 
+setInterval(() => {
+    allClients.forEach(client => {
         // 4. session expired?
         const now = moment();
         const thrownAway = moment(client.user?.shouldLogout) < now;
@@ -31,41 +28,39 @@ function throwAway(client) {
     allClients.splice(i, 1);
 };
 
-const self = {
 
-    connection: async (client) => {
+class Service {
+    constructor() { }
+
+    async connection(client) {
         console.log('CONNECT');
         client.emit('userMessage', 'Connected');
         allClients.push(client);
         //fs.openSync('./buff/'+ client.id, 'w');
         client.emit('onConnect', 'Connected');
-    },
+    }
 
-    disconnection: async (client) => {
+    async disconnection(client) {
         console.log('DISCONNECT');
         throwAway(client);
-    },
+    }
 
-    identify: async (client, msg) => {
-
+    async identify(client, msg) {
         // 1. token missed?
         const tokenMissed = !msg?.auth_token && client?.user?.auth_token;
         if (tokenMissed) throw 'Missed the "auth_token"'; // ...................... must be "msg.auth_token"
-
         // 2. token actual
         const tokenActual = client?.user?.auth_token == msg.auth_token; // ........ Compare tokens (back n front)
         if (!tokenActual) client.user = await user.getByToken(msg.auth_token); // .............. identify the user & set user to Socket.io 
-
         // 3. session is lost?
         if (!client.user) {
             // throwAway(client);
             client.emit('session-is-lost', {}); // ..................... rapport about Wrong Code
             throw 'Can\'t find user by "auth_token " ' + msg.auth_token; // Fail !!!
         };
-
-        return 1;
-    },
+        return { ok: true }
+    }
 
 };
 
-export default self;
+export default new Service();

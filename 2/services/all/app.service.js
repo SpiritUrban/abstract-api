@@ -1,13 +1,13 @@
-const level = '../../';
-import { log, pro, lex } from '../../my_modules/staff.js';
+import { log } from 'high-level';
 import { App } from '../../models/index.js';
 
-const self = {
+class  AppService {
+    constructor() { }
 
-    createIfAbsent: async () => {
+    async createIfAbsent  ()  {
         // Сheck if the App Settings exists - Don't add duplicate Settings
         if (!await App.findOne()) await new App({
-            name: 'Example Hotel',
+            name: 'Example Institution',
             hotel: {
                 map: {
                     coordinates: {
@@ -17,22 +17,22 @@ const self = {
                 }
             }
         }).save();
-        return 'ok'
-    },
+        return { ok: true };
+    }
 
-    saveInfo: async (info) => {
-        self.createIfAbsent();
+    async saveInfo (info) {
+        this.createIfAbsent();
         return await App.findOneAndUpdate({}, info);
-    },
+    }
 
-    getInfo: async () => {
-        self.createIfAbsent();
+    async getInfo()  {
+        this.createIfAbsent();
         return await App.findOne({});
-    },
+    }
 
-    getInfoSafe: async () => {
-        self.createIfAbsent();
-        const _ = await self.getInfo();
+    async getInfoSafe()  {
+        this.createIfAbsent();
+        const _ = await this.getInfo();
         return {
             name: _.name,
             hotel: {
@@ -42,14 +42,17 @@ const self = {
             },
             google_api_key: _.google_api_key
         };
-    },
+    }
 
-    getGoogleApiJSON: async () => {
-        const _ = await self.getInfo();
+    async getGoogleApiJSON()  {
+        const _ = await this.getInfo();
         return JSON.parse(_.google_api_JSON)
-    },
+    }
+};
 
-}
+export default new  AppService();
 
-// module.exports = self;
-export default self;
+
+
+
+

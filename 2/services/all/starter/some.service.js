@@ -2,50 +2,51 @@ const level = '../../';
 const { log, pro, lex } = require(`${level}my_modules/staff`);
 const { ChatMsg } = require(`${level}models`);
 
-const self = {
+class Service {
+    constructor() { }
 
-    get: async (_id, ip) => {
-        // const hotels = (_id) ?
-        //     await Hotel.findOne({ _id }) :
+    async get(_id, ip) {
+        // const essences = (_id) ?
+        //     await Essence.findOne({ _id }) :
         //     (ip) ?
-        //         await Hotel.find({ ip }) :
-        //         await Hotel.find({});
-        // return { hotels };
-    },
+        //         await Essence.find({ ip }) :
+        //         await Essence.find({});
+        // return { essences };
+    }
 
-    add: async (msg) => {
+    async add(msg) {
         // await self.create(msg);
-        // return 'ready';
-    },
+        // return { ok: true };
+    }
 
-    create: async (msg) => {
-        // await new Hotel({
-        //     hotel: msg.hotel,
+    async create(msg) {
+        // await new Essence({
+        //     essence: msg.essence,
         //     administrator: msg.administrator,
         //     email: msg.email,
         //     ip: msg.ip
         // }).save();
-    },
+    }
 
-    del: async (_id) => {
+    async del(_id) {
         // await self.remove(_id);
-        // return 'ready';
-    },
+        // return { ok: true };
+    }
 
-    remove: async (_id) => {
-        // await Hotel.findOneAndRemove({ _id });
-    },
+    async remove(_id) {
+        // await Essence.findOneAndRemove({ _id });
+    }
 
-    edit: async (msg) => {
-        // await Hotel.findByIdAndUpdate({ _id: msg._id }, {
-        //     hotel: msg.hotel,
+    async edit(msg) {
+        // await Essence.findByIdAndUpdate({ _id: msg._id }, {
+        //     Essence: msg.Essence,
         //     administrator: msg.administrator,
         //     email: msg.email,
         //     ip: msg.ip,
         //     map: msg.map
         // });
-    },
+    }
 
-}
+};
 
-module.exports = self;
+export default new AppService();
