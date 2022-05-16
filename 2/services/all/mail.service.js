@@ -63,14 +63,11 @@ class MailService {
 
     // main
     //
-    async send(template) {
+    async send(set) {
         await this.init();
-        let template = { from, to, subject, html };
-        this.transporter.sendMail(template, async (err, res) => {
-            // if (err) return new Error(err)
-            if (err) reject(err); //throw new Error(err)
-            else resolve('Email Sent');
-        });
+        this.transporter.sendMail(set, async (err, res) => err
+            ? { ok: false, msg: 'Can not send Email!', err }
+            : { ok: true, msg: 'Email Sent' });
     }
 
     // Universal: sendMail
@@ -87,7 +84,7 @@ class MailService {
                 html: null
             };
 
-            switch (expr) {
+            switch (name) {
 
                 case 'WithPassword':
                     user = await User.findOne({ email });
@@ -120,7 +117,7 @@ class MailService {
                     break;
 
                 case 'Verification':
-                    user = await User.findOne({ _id: user_id });
+                    user = await User.findOne({ _id: userId });
                     set = {
                         from: `COMPANY <${process.env.GMAIL}> `,
                         to: user.email,
@@ -165,8 +162,8 @@ class MailService {
         await this.sendMail('AndRestorePassword', email)
     }
     // mail verification
-    async sendMailVerification(user_id) {
-        await this.sendMail('Verification', null, user_id)
+    async sendMailVerification(userId) {
+        await this.sendMail('Verification', null, userId)
     }
     // mail test
     async test(email) {
