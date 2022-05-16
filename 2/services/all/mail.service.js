@@ -36,11 +36,8 @@ class MailWithPassword extends Mail {
 
 
 class MailService {
-
-
     constructor() { }
 
-    //
     // init
     //
     async init() {
@@ -64,7 +61,6 @@ class MailService {
         });
     }
 
-    //
     // main
     //
     async send(template) {
@@ -77,119 +73,105 @@ class MailService {
         });
     }
 
-    async template(name) {
-        const example = {
-            from: null,
-            to: null,
-            subject: null,
-            html: null
-        };
-        switch (expr) {
-            case 'WithPassword':
-                return
-                break;
-            case 'AndRestorePassword':
-                return
-                break;
-            case 'Verification':
-                return
-                break;
-            case 'test':
-                return
-                break;
-            default:
-                return
-        }
-
-    };
-
-    //
     // Universal: sendMail
     //
-    sendMail(name){
+    async sendMail(name, email, user_id) {
+        try {
 
+            let user = null;
 
-    }
-
-    //
-    // mail restore simple
-    //
-    async sendMailWithPassword(email) {
-    try {
-        let user = await User.findOne({ email });
-        const template = (user.openPassword) ?
-            {
-                from: `COMPANY <${process.env.GMAIL}> `,
-                to: email,
-                subject: 'Restore of password',
-                html: `<p> You password: ${user.openPassword} </p>`
-            } : {
-                from: `COMPANY <${process.env.GMAIL}> `,
-                to: email,
-                subject: 'Restore of password',
-                html: `<p> Only visitors can get password. Contact your main administrator to recover your password. </p>`
+            let set = {
+                from: null,
+                to: null,
+                subject: null,
+                html: null
             };
-        await this.send(template);
-        return { ok: true };
-    } catch (err) {
-        return { ok: false, err }
-    }
-}
 
-    //
-    // mail restore
-    //
-    async sendMailAndRestorePassword(email) {
-    let user = await User.findOne({ email });
+            switch (expr) {
 
-    const example = {
-        from: `COMPANY <${process.env.GMAIL}> `,
-        to: user.email,
-        subject: 'Restore of password',
-        html: `
-            <p>
-                To restore your password, go to this link. 
-                <a href="${process.env.HOST}/pages/auth/restore-password?user=${user._id}&token=${user.email_token}" target="_blank">link</a>
-            </p>`  + new Date()
+                case 'WithPassword':
+                    user = await User.findOne({ email });
+                    set = (user.openPassword) ?
+                        {
+                            from: `COMPANY <${process.env.GMAIL}> `,
+                            to: email,
+                            subject: 'Restore of password',
+                            html: `<p> You password: ${user.openPassword} </p>`
+                        } : {
+                            from: `COMPANY <${process.env.GMAIL}> `,
+                            to: email,
+                            subject: 'Restore of password',
+                            html: `<p> Only visitors can get password. Contact your main administrator to recover your password. </p>`
+                        };
+                    break;
+
+                case 'AndRestorePassword':
+                    user = await User.findOne({ email });
+                    set = {
+                        from: `COMPANY <${process.env.GMAIL}> `,
+                        to: user.email,
+                        subject: 'Restore of password',
+                        html: `
+                        <p>
+                            To restore your password, go to this link. 
+                            <a href="${process.env.HOST}/pages/auth/restore-password?user=${user._id}&token=${user.email_token}" target="_blank">link</a>
+                        </p>`  + new Date()
+                    };
+                    break;
+
+                case 'Verification':
+                    user = await User.findOne({ _id: user_id });
+                    set = {
+                        from: `COMPANY <${process.env.GMAIL}> `,
+                        to: user.email,
+                        subject: 'Mail Confirmation',
+                        html: `
+                        <p>
+                            To verify your mail, go to this link. 
+                            <a href="${process.env.HOST}/pages/auth/mail-verify?user=${user._id}&token=${user.email_token}" target="_blank">link</a>
+                        </p>`  + new Date()
+                    }
+                    break;
+
+                case 'test':
+                    set = {
+                        from: `COMPANY <${process.env.GMAIL}> `,
+                        to: email,
+                        subject: 'test ',
+                        html: `
+                        <p>
+                            TEST
+                        </p>`  + new Date()
+                    }
+                    break;
+                default:
+                    return { ok: false, msg: 'Mail name not found!' }
+            };
+
+            await this.send(set);
+            return { ok: true };
+
+        } catch (err) {
+            return { ok: false, err }
+        }
     };
 
-    this.send(example);
-    return { ok: true }
-}
-
-    //
+    // mail restore simple
+    async sendMailWithPassword(email) {
+        await this.sendMail('WithPassword', email)
+    }
+    // mail restore
+    async sendMailAndRestorePassword(email) {
+        await this.sendMail('AndRestorePassword', email)
+    }
     // mail verification
-    //
     async sendMailVerification(user_id) {
-    let user = await User.findOne({ _id: user_id });
-    const example = {
-        from: `COMPANY <${process.env.GMAIL}> `,
-        to: user.email,
-        subject: 'Mail Confirmation',
-        html: `
-            <p>
-                To verify your mail, go to this link. 
-                <a href="${process.env.HOST}/pages/auth/mail-verify?user=${user._id}&token=${user.email_token}" target="_blank">link</a>
-            </p>`  + new Date()
+        await this.sendMail('Verification', null, user_id)
     }
-    this.send(example);
-}
-
-    //
     // mail test
-    //
     async test(email) {
-    const example = {
-        from: `COMPANY <${process.env.GMAIL}> `,
-        to: email,
-        subject: 'test ',
-        html: `
-            <p>
-                TEST
-            </p>`  + new Date()
+        await this.sendMail('test', email, null)
     }
-    this.send(example);
-}
 };
 
 export default new MailService();
