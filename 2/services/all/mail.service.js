@@ -83,93 +83,113 @@ class MailService {
             to: null,
             subject: null,
             html: null
+        };
+        switch (expr) {
+            case 'WithPassword':
+                return
+                break;
+            case 'AndRestorePassword':
+                return
+                break;
+            case 'Verification':
+                return
+                break;
+            case 'test':
+                return
+                break;
+            default:
+                return
         }
-        return [
 
-        ];
     };
+
+    //
+    // Universal: sendMail
+    //
+    sendMail(name){
+
+
+    }
 
     //
     // mail restore simple
     //
     async sendMailWithPassword(email) {
-        try {
-            let user = await User.findOne({ email });
-            const template = (user.openPassword) ?
-                {
-                    from: `COMPANY <${process.env.GMAIL}> `,
-                    to: email,
-                    subject: 'Restore of password',
-                    html: `<p> You password: ${user.open_password} </p>`
-                } : {
-                    from: `COMPANY <${process.env.GMAIL}> `,
-                    to: email,
-                    subject: 'Restore of password',
-                    html: `<p> Only visitors can get password. Contact your main administrator to recover your password. </p>`
-                };
-            await this.send(template);
-            return { ok: true };
-        } catch (err) {
-            return { ok: false, err }
-        }
+    try {
+        let user = await User.findOne({ email });
+        const template = (user.openPassword) ?
+            {
+                from: `COMPANY <${process.env.GMAIL}> `,
+                to: email,
+                subject: 'Restore of password',
+                html: `<p> You password: ${user.openPassword} </p>`
+            } : {
+                from: `COMPANY <${process.env.GMAIL}> `,
+                to: email,
+                subject: 'Restore of password',
+                html: `<p> Only visitors can get password. Contact your main administrator to recover your password. </p>`
+            };
+        await this.send(template);
+        return { ok: true };
+    } catch (err) {
+        return { ok: false, err }
     }
+}
 
     //
     // mail restore
     //
     async sendMailAndRestorePassword(email) {
-        let user = await User.findOne({ email });
+    let user = await User.findOne({ email });
 
-        const example = {
-            from: `COMPANY <${process.env.GMAIL}> `,
-            to: user.email,
-            subject: 'Restore of password',
-            html: `
+    const example = {
+        from: `COMPANY <${process.env.GMAIL}> `,
+        to: user.email,
+        subject: 'Restore of password',
+        html: `
             <p>
                 To restore your password, go to this link. 
                 <a href="${process.env.HOST}/pages/auth/restore-password?user=${user._id}&token=${user.email_token}" target="_blank">link</a>
-            </p>`
-                + new Date()
-        };
-        this.send(example);
-        return { ok: true }
-    }
+            </p>`  + new Date()
+    };
+
+    this.send(example);
+    return { ok: true }
+}
 
     //
     // mail verification
     //
     async sendMailVerification(user_id) {
-        let user = await User.findOne({ _id: user_id });
-        const example = {
-            from: `COMPANY <${process.env.GMAIL}> `,
-            to: user.email,
-            subject: 'Mail Confirmation',
-            html: `
+    let user = await User.findOne({ _id: user_id });
+    const example = {
+        from: `COMPANY <${process.env.GMAIL}> `,
+        to: user.email,
+        subject: 'Mail Confirmation',
+        html: `
             <p>
                 To verify your mail, go to this link. 
                 <a href="${process.env.HOST}/pages/auth/mail-verify?user=${user._id}&token=${user.email_token}" target="_blank">link</a>
-            </p>`
-                + new Date()
-        }
-        this.send(example);
+            </p>`  + new Date()
     }
+    this.send(example);
+}
 
     //
     // mail test
     //
     async test(email) {
-        const example = {
-            from: `COMPANY <${process.env.GMAIL}> `,
-            to: email,
-            subject: 'test ',
-            html: `
+    const example = {
+        from: `COMPANY <${process.env.GMAIL}> `,
+        to: email,
+        subject: 'test ',
+        html: `
             <p>
                 TEST
-            </p>`
-                + new Date()
-        }
-        this.send(example);
+            </p>`  + new Date()
     }
+    this.send(example);
+}
 };
 
 export default new MailService();
