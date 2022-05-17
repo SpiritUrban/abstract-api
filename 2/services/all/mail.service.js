@@ -12,29 +12,6 @@ import nodemailer from 'nodemailer';
 // ............................................. https://myaccount.google.com/lesssecureapps
 // process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
-class Mail {
-    from
-    to
-    subject
-    html
-    constructor() { }
-    send() {
-        // const template = 
-    }
-};
-
-// old: sendMailWithPassword
-//
-class MailWithPassword extends Mail {
-    mailName = 'MailWithPassword';
-    from = `FERON <${process.env.GMAIL}> `;
-    to = email;
-    subject = 'Restore of password';
-    html = `<p> You password: ${user.open_password} </p>`;
-    constructor() { super() }
-};
-
-
 class MailService {
     constructor() { }
 
@@ -42,8 +19,8 @@ class MailService {
     //
     async init() {
         const appInfo = await app.getInfo();
-        if (!appInfo.gmailSettings) throw 'Error: No data for init gmail'
-        const gmailSettings = appInfo.gmailSettings
+        if (!appInfo.gmailSettings) return { ok: false, msg: 'Error: no gmail settings!', err };
+        const gmailSettings = appInfo.gmailSettings;
         //
         this.transporter = nodemailer.createTransport({
             // service: 'Gmail',
@@ -72,7 +49,7 @@ class MailService {
 
     // Universal: sendMail
     //
-    async sendMail(name, email, user_id) {
+    async sendMail(name, email, userШd) {
         try {
 
             let user = null;
