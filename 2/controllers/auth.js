@@ -1,15 +1,12 @@
 import { AuthService } from '../services/index.js';
 import { log, } from '../../../high-level/index.js';
-import Controller from '../classes/controller.class.js'
+import Controller from '../classes/controller.class.js';
 
 class RegisterController extends Controller {
     conName = 'Register';
     successMsg = 'User is registered';
     unSuccessMsg = 'Cannot register!';
-    errMsg = `Error! ${this.unSuccessMsg}`;
-    constructor() { super() }
     do = async _ => this.result = await AuthService.registration(this.req.body);
-    fork = _ => this.result.ok ? this.successDTO : this.unSuccessDTO
 }
 
 class ChangePasswordController extends Controller {
@@ -43,4 +40,3 @@ class RestorePasswordController extends Controller {
 }
 
 export { RegisterController, ChangePasswordController, RestoreAccessController, RestorePasswordController };
-

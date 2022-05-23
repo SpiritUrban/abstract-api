@@ -11,10 +11,13 @@ class DTO {
     from = 'send Universal';
 }
 
+
+
 class Controller {
     result = { some: 'Useful data' };
     req = {};
     res = {};
+    
     constructor(_this, conName) {
         this.conName = conName;
         this.result = {};
@@ -57,15 +60,17 @@ class Controller {
         }
     }
 
+    get errMsg () {
+        return `Error! ${this.unSuccessMsg}`;
+    }
+
+
     async go(req, res) {
         this.req = req;
         this.res = res;
         try {
             log(`Controller: ${this.conName}`, this.req.body);
             await this.do();
-            
-            log("this.result", this.result) // { ok: false, err: 'Email required!' }
-
             return this.fork();
         } catch (e) {
             this.err = e;
@@ -73,6 +78,9 @@ class Controller {
             return this.errorDTO
         };
     }
+
+    fork = _ => this.result.ok ? this.successDTO : this.unSuccessDTO
+
 };
 
 export default Controller;

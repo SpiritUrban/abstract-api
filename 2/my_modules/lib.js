@@ -1,6 +1,3 @@
-const level = '../';
-import { log,  rand_str_long } from '../my_modules/staff.js';
-
 // common info assembling
 const commonInfo = (req) => {
     return {
@@ -30,57 +27,8 @@ const apiEnsureAuthenticated = async (req, res, next) => {
     res.json({ ok: false, msg: 'User not logged' });
 };
 
-const error = (err, req, res, status, msg2) => {
-    err = err.toString();
-    // log('error Universal'.error, err, status, msg2, '\n')
-    res.json({
-        status,
-        err,
-        success: false,
-        msg: 'Error in ' + req.url,
-        msg2: msg2 || '',
-        from: 'error Universal'
-    });
-};
-
-const send = (result, req, res, msg2) => {
-    res.json({
-        code: '200',
-        result,
-        ok: true,
-        success: true,
-        msg: 'ok',
-        msg2: msg2 || '',
-        from: 'send Universal'
-    });
-};
-
-const good = (result, req, res, msg2) => {
-    res.json({
-        code: '200',
-        result,
-        ok: true,
-        success: true,
-        msg: 'Good :)',
-        msg2: msg2 || '',
-        from: 'send Universal'
-    });
-};
-
-const bad = (result, req, res, msg2) => {
-    res.json({
-        code: '200',
-        result,
-        ok: false,
-        success: false,
-        msg: 'Not good :(',
-        msg2: msg2 || '',
-        from: 'send Universal'
-    });
-};
 
 const getUserDB = (by, req, res) => {
-    // log('getUserDB by '.info, by)
     return new Promise(resolve => {
         User.findOne(by, (err, result) => {
             if (err) {
@@ -94,7 +42,6 @@ const getUserDB = (by, req, res) => {
 };
 
 const userExist = (user, req, res) => {
-    // log('userExist'.info)
     if (user == null) {
         error('custom', req, res, 204, 'User not exist!')
         return false
@@ -102,7 +49,6 @@ const userExist = (user, req, res) => {
 };
 
 const getUserSAFE = async (by, req, res) => {
-    // log('getUserSAFE by '.info, by)
     return new Promise(async resolve => {
         let _user = await getUserDB(by, req, res); // Get user
         userExist(_user, req, res); // Barier
@@ -119,10 +65,6 @@ export {
     url_end,
     ensureAuthenticated,
     apiEnsureAuthenticated,
-    error,
-    send,
-    good,
-    bad,
     getUserDB,
     userExist,
     getUserSAFE,

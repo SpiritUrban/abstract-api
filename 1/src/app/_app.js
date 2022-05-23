@@ -1,5 +1,3 @@
-const level = './';
-
 // measuring
 console.time('app startup time');
 

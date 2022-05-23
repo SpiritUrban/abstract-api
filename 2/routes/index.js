@@ -14,16 +14,11 @@ router.get('/', function (req, res, next) {
   });
 });
 
-
 [
   { path: '/register', method: 'post', controller: RegisterController }
 ].forEach(
-  // router.post('/register', mediator.bind(new RegisterController()));
+  // it is like - router.post('/register', mediator.bind(new RegisterController()));
   item => router[item.method](item.path, mediator.bind(new item.controller()))
 );
-
-
-
-
 
 export default router;
